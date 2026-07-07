@@ -1,0 +1,8 @@
+node_modules/
+dist/
+coverage/
+assets/grammars/
+tests/fixtures/
+package-lock.json
+*.tgz
+.codemap/

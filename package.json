@@ -1,0 +1,44 @@
+{
+  "name": "workspace-map-mcp",
+  "version": "0.1.0",
+  "description": "MCP server that maps a workspace: markdown folder/file tree + code relation maps (types, inheritance, imports, calls) for AI-assisted navigation.",
+  "type": "module",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
+  "bin": {
+    "workspace-map-mcp": "dist/index.js"
+  },
+  "main": "dist/index.js",
+  "files": [
+    "dist",
+    "assets/grammars",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "grammars": "node scripts/fetch-grammars.mjs",
+    "prepare": "node scripts/fetch-grammars.mjs --soft"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.12.0",
+    "ignore": "^7.0.0",
+    "web-tree-sitter": "~0.24.7",
+    "zod": "^3.24.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "eslint": "^9.17.0",
+    "prettier": "^3.4.0",
+    "tree-sitter-wasms": "^0.1.12",
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.0",
+    "typescript-eslint": "^8.19.0",
+    "vitest": "^3.0.0"
+  }
+}

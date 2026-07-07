@@ -1,0 +1,19 @@
+# Node
+/node_modules/
+/dist/
+*.log
+*.tgz
+
+# Generated perf fixture (created on demand by scripts/generate-perf-fixture.mjs)
+/tests/fixtures/perf-10k/
+
+# Coverage
+/coverage/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment
+.env
+.env.*
