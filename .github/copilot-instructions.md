@@ -3,6 +3,8 @@
 Auto-generated from all feature plans. Last updated: 2026-07-07
 
 ## Active Technologies
+- TypeScript 5.x on Node.js ≥ 20 LTS (unchanged from feature 001) + `@modelcontextprotocol/sdk` (adds `StreamableHTTPServerTransport` + Node `http` server), existing `web-tree-sitter`/`ignore`/`zod`; no new runtime dependencies — HTTP layer uses Node built-ins (002-hostable-mcp-distribution)
+- Files — unchanged `.codemap/` outputs; new writes: target project's `.vscode/mcp.json` (merge), docs/ content in this repo (002-hostable-mcp-distribution)
 
 - TypeScript 5.x on Node.js ≥ 20 LTS + `@modelcontextprotocol/sdk` (MCP server + stdio transport), `web-tree-sitter` (WASM parsers: C#, TypeScript/JavaScript, Python, Java, Go, Rust), `ignore` (.gitignore semantics), `zod` (tool input validation) (001-workspace-map-mcp)
 
@@ -22,6 +24,7 @@ npm test; npm run lint
 TypeScript 5.x on Node.js ≥ 20 LTS: Follow standard conventions
 
 ## Recent Changes
+- 002-hostable-mcp-distribution: Added TypeScript 5.x on Node.js ≥ 20 LTS (unchanged from feature 001) + `@modelcontextprotocol/sdk` (adds `StreamableHTTPServerTransport` + Node `http` server), existing `web-tree-sitter`/`ignore`/`zod`; no new runtime dependencies — HTTP layer uses Node built-ins
 
 - 001-workspace-map-mcp: Added TypeScript 5.x on Node.js ≥ 20 LTS + `@modelcontextprotocol/sdk` (MCP server + stdio transport), `web-tree-sitter` (WASM parsers: C#, TypeScript/JavaScript, Python, Java, Go, Rust), `ignore` (.gitignore semantics), `zod` (tool input validation)
 
