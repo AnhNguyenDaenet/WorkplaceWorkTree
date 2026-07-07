@@ -17,3 +17,6 @@ Thumbs.db
 # Environment
 .env
 .env.*
+
+# Generated workspace maps (regenerate via scan tools)
+/.codemap/

@@ -1,0 +1,12 @@
+{
+  "servers": {
+    "workspace-map": {
+      "command": "node",
+      "args": [
+        "${workspaceFolder}/dist/index.js",
+        "--workspace",
+        "${workspaceFolder}"
+      ]
+    }
+  }
+}

@@ -27,3 +27,11 @@ TypeScript 5.x on Node.js ≥ 20 LTS: Follow standard conventions
 
 <!-- MANUAL ADDITIONS START -->
 <!-- MANUAL ADDITIONS END -->
+
+<!-- BEGIN workspace-map-mcp -->
+## Workspace maps (generated)
+
+- `.codemap/structure.md` — full folder/file tree; read this to resolve any relative path instead of listing directories.
+- `.codemap/relations.md` — type→file index, inheritance, imports, calls; read this to jump straight to a type's defining file instead of searching.
+- If either file is missing or looks stale (see its generation timestamp), call the `update_maps` tool on the `workspace-map-mcp` MCP server.
+<!-- END workspace-map-mcp -->
