@@ -1,9 +1,30 @@
 {
-  "name": "workspace-map-mcp",
-  "version": "0.1.0",
+  "name": "@anhnguyendaenet/workspace-map-mcp",
+  "version": "0.2.0",
   "description": "MCP server that maps a workspace: markdown folder/file tree + code relation maps (types, inheritance, imports, calls) for AI-assisted navigation.",
   "type": "module",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AnhNguyenDaenet/WorkplaceWorkTree.git"
+  },
+  "bugs": {
+    "url": "https://github.com/AnhNguyenDaenet/WorkplaceWorkTree/issues"
+  },
+  "homepage": "https://github.com/AnhNguyenDaenet/WorkplaceWorkTree#readme",
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "workspace",
+    "codemap",
+    "code-navigation",
+    "tree-sitter",
+    "ai-agent",
+    "copilot"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
   "engines": {
     "node": ">=20"
   },
@@ -23,7 +44,8 @@
     "lint": "eslint .",
     "format": "prettier --write .",
     "grammars": "node scripts/fetch-grammars.mjs",
-    "prepare": "node scripts/fetch-grammars.mjs --soft"
+    "prepublishOnly": "node scripts/fetch-grammars.mjs && tsc -p tsconfig.json",
+    "prepare": "node scripts/fetch-grammars.mjs --soft && node scripts/build-if-needed.mjs"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.12.0",

@@ -17,6 +17,11 @@ import type { ScanConfiguration, ToolResultReport } from './types.js';
 export interface ServerOptions {
   workspaceRoot: string;
   maxDocLines: number;
+  /**
+   * Serialization mutex. HTTP mode passes one process-wide instance shared by all
+   * per-request server instances (FR-009); when omitted (stdio) a fresh one is used.
+   */
+  mutex?: AsyncMutex;
 }
 
 const QUEUE_WARNING_THRESHOLD_MS = 25;
@@ -27,7 +32,7 @@ const QUEUE_WARNING_THRESHOLD_MS = 25;
  */
 export function createServer(options: ServerOptions): McpServer {
   const server = new McpServer({ name: SERVER_NAME, version: VERSION });
-  const mutex = new AsyncMutex();
+  const mutex = options.mutex ?? new AsyncMutex();
 
   const config = (extra?: Partial<ScanConfiguration>): ScanConfiguration => ({
     workspaceRoot: options.workspaceRoot,

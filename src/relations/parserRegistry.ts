@@ -1,6 +1,6 @@
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 import * as TreeSitter from 'web-tree-sitter';
+import { resolveGrammarsDir } from '../core/assets.js';
 import type { CallReference, TypeEntry, TypeRelation } from '../types.js';
 
 /**
@@ -26,10 +26,6 @@ const ParserCtor: any = ts.Parser ?? ts.default ?? TreeSitter;
 let initPromise: Promise<void> | null = null;
 const parsers = new Map<string, any>();
 
-function grammarsDir(): string {
-  return fileURLToPath(new URL('../../assets/grammars/', import.meta.url));
-}
-
 /** Get (and cache) a parser for a deep-tier language; null when no grammar is available. */
 export async function getParser(language: string): Promise<any | null> {
   const file = GRAMMAR_FILES[language];
@@ -39,7 +35,7 @@ export async function getParser(language: string): Promise<any | null> {
   const cached = parsers.get(language);
   if (cached) return cached;
   const LanguageNs: any = ts.Language ?? ParserCtor.Language;
-  const lang = await LanguageNs.load(path.join(grammarsDir(), file));
+  const lang = await LanguageNs.load(path.join(resolveGrammarsDir(), file));
   const parser = new ParserCtor();
   parser.setLanguage(lang);
   parsers.set(language, parser);

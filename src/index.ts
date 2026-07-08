@@ -1,10 +1,15 @@
 #!/usr/bin/env node
-import { accessSync, constants, statSync } from 'node:fs';
-import path from 'node:path';
-import { parseArgs } from 'node:util';
-import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
+import { CliUsageError, parseServeArgs } from './cli/args.js';
 import { createServer } from './server.js';
-import { DEFAULT_MAX_DOC_LINES, SERVER_NAME, VERSION } from './version.js';
+import { startStdio } from './transport/stdio.js';
+import { SERVER_NAME, VERSION } from './version.js';
+
+/**
+ * Thin CLI router (T004, research R4): default → serve (stdio unless --http),
+ * `init` → project setup subcommand, `--version`/`-v` → print version (FR-015).
+ * Legacy invocation `--workspace <p> [--max-doc-lines n]` behaves byte-identically
+ * to v0.1.0 (contracts/cli.md backward-compatibility guarantee, FR-006).
+ */
 
 function fail(message: string): never {
   console.error(`[${SERVER_NAME}] ${message}`);
@@ -14,55 +19,38 @@ function fail(message: string): never {
   process.exit(1);
 }
 
-/** CLI entry (T014): validate --workspace, start the stdio MCP server. */
 async function main(): Promise<void> {
-  let values: { workspace?: string; 'max-doc-lines'?: string };
+  const argv = process.argv.slice(2);
+
+  if (argv[0] === 'init') {
+    const { runInit } = await import('./cli/init.js');
+    await runInit(argv.slice(1));
+    return;
+  }
+
+  let parsed;
   try {
-    ({ values } = parseArgs({
-      options: {
-        workspace: { type: 'string' },
-        'max-doc-lines': { type: 'string' },
-      },
-      strict: true,
-    }));
+    parsed = parseServeArgs(argv);
   } catch (err) {
-    fail(err instanceof Error ? err.message : String(err));
+    if (err instanceof CliUsageError) fail(err.message);
+    throw err;
   }
 
-  const workspace = values.workspace;
-  if (!workspace) {
-    fail('Missing required option --workspace.');
-  }
-  if (!path.isAbsolute(workspace)) {
-    fail(`--workspace must be an absolute path (got "${workspace}").`);
-  }
-  let stat;
-  try {
-    stat = statSync(workspace);
-  } catch {
-    fail(`Workspace root not found: "${workspace}". Provide an existing, readable directory.`);
-  }
-  if (!stat.isDirectory()) {
-    fail(`Workspace root is not a directory: "${workspace}".`);
-  }
-  try {
-    accessSync(workspace, constants.R_OK);
-  } catch {
-    fail(`Workspace root is not readable: "${workspace}". Check permissions.`);
+  if (parsed.kind === 'version') {
+    console.log(VERSION);
+    process.exit(0);
   }
 
-  let maxDocLines = DEFAULT_MAX_DOC_LINES;
-  if (values['max-doc-lines'] !== undefined) {
-    maxDocLines = Number(values['max-doc-lines']);
-    if (!Number.isInteger(maxDocLines) || maxDocLines <= 100) {
-      fail(`--max-doc-lines must be an integer greater than 100 (got "${values['max-doc-lines']}").`);
-    }
+  const { config } = parsed;
+
+  if (config.transport === 'http') {
+    const { startHttp } = await import('./transport/http.js');
+    await startHttp(config);
+    return;
   }
 
-  const server = createServer({ workspaceRoot: path.resolve(workspace), maxDocLines });
-  const transport = new StdioServerTransport();
-  await server.connect(transport);
-  console.error(`[${SERVER_NAME}] v${VERSION} ready — workspace: ${workspace}`);
+  const server = createServer({ workspaceRoot: config.workspaceRoot, maxDocLines: config.maxDocLines });
+  await startStdio(server, config);
 }
 
 main().catch((err) => {

@@ -1,4 +1,6 @@
+import { spawn, type ChildProcess } from 'node:child_process';
 import { promises as fs } from 'node:fs';
+import net from 'node:net';
 import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -50,4 +52,56 @@ export async function exists(p: string): Promise<boolean> {
 
 export function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+/** Copy a fixture into `<tmp>/<name>` so two copies share an identical root folder name. */
+export async function copyFixtureNamed(
+  fixture: string,
+  rootName: string,
+  prefix = 'wmap-',
+): Promise<string> {
+  const parent = await mkTmpDir(prefix);
+  const dest = path.join(parent, rootName);
+  await fs.cp(fixturePath(fixture), dest, { recursive: true });
+  return dest;
+}
+
+/** Find an ephemeral free TCP port on loopback. */
+export async function freePort(): Promise<number> {
+  return new Promise((resolve, reject) => {
+    const srv = net.createServer();
+    srv.listen(0, '127.0.0.1', () => {
+      const { port } = srv.address() as net.AddressInfo;
+      srv.close((err) => (err ? reject(err) : resolve(port)));
+    });
+  });
+}
+
+export type SpawnedServer = ChildProcess & { stderrText: () => string };
+
+/** Spawn the server from source (tsx) with captured stderr. */
+export function spawnServer(args: string[]): SpawnedServer {
+  const child = spawn(process.execPath, ['--import', 'tsx', 'src/index.ts', ...args], {
+    cwd: repoRoot,
+    stdio: ['ignore', 'ignore', 'pipe'],
+  }) as SpawnedServer;
+  let stderr = '';
+  child.stderr!.on('data', (chunk: Buffer) => {
+    stderr += chunk.toString();
+  });
+  child.stderrText = () => stderr;
+  return child;
+}
+
+/** Wait until the spawned server logs its ready line (or fail fast on early exit). */
+export async function waitForReady(child: SpawnedServer): Promise<void> {
+  const deadline = Date.now() + 30000;
+  while (Date.now() < deadline) {
+    if (child.stderrText().includes('ready —')) return;
+    if (child.exitCode !== null) {
+      throw new Error(`server exited early (${child.exitCode}): ${child.stderrText()}`);
+    }
+    await sleep(100);
+  }
+  throw new Error(`server not ready in time: ${child.stderrText()}`);
 }
