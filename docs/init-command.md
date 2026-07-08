@@ -7,6 +7,28 @@ cd C:\path\to\your\project
 workspace-map-mcp init --yes
 ```
 
+## Prerequisites
+
+**To run `init` itself** you only need Node.js ≥ 20 — nothing has to be installed first if you use npx:
+
+```powershell
+cd C:\path\to\your\project
+npx @anhndh1997/workspace-map-mcp init --yes
+```
+
+The bare `workspace-map-mcp init` form requires a prior global install (see [install.md](./install.md)). Run the command *inside* the target project, or point at it with `--target <dir>` (the directory must already exist).
+
+**For the generated entry to work afterwards**, the channel you pick has its own requirement — `init` only writes the config, it does not install anything for you:
+
+| Choice | Needed on this machine before the MCP client can launch the entry |
+|---|---|
+| `--channel npx` (default) | Nothing — npx downloads the package on first launch (Node ≥ 20) |
+| `--channel global` | `npm install -g @anhndh1997/workspace-map-mcp` so the `workspace-map-mcp` command exists on PATH |
+| `--channel docker` | Docker running + access to `ghcr.io/anhnguyendaenet/workspace-map-mcp` (pulled automatically on first launch; see [docker.md](./docker.md)) |
+| `--transport http` | You start the server yourself before connecting: `workspace-map-mcp --workspace <path> --http --port <n>` (see [transports.md](./transports.md)) |
+
+Also note: v1 targets VS Code's `.vscode/mcp.json` — for other clients (e.g. Claude Desktop) copy a recipe from [transports.md](./transports.md) instead; and if the project already has an mcp.json, it must be strict JSON (see the JSONC limitation below).
+
 ## Flags
 
 | Flag | Values | Default | Meaning |

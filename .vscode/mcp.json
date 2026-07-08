@@ -1,8 +1,13 @@
 {
   "servers": {
     "workspace-map": {
-      "command": "workspace-map-mcp",
-      "args": ["--workspace", "${workspaceFolder}"]
+      "command": "docker",
+      "args": [
+        "run", "-i", "--rm",
+        "-v", "${workspaceFolder}:/workspace",
+        "ghcr.io/anhnguyendaenet/workspace-map-mcp",
+        "--workspace", "/workspace"
+      ]
     }
   }
 }
