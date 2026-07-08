@@ -1,50 +1,50 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+<!--
+Sync Impact Report
+- Version change: [template] → 1.0.0 (initial ratification)
+- Principles established: I. Simplicity & YAGNI; II. Test-Backed Behavior; III. Backward-Compatible CLI & Formats; IV. Atomic, Observable Operations; V. Workspace Sovereignty
+- Added sections: Additional Constraints; Development Workflow & Quality Gates
+- Templates requiring updates: ✅ plan-template.md (generic gates map 1:1 to Principles I–V); ✅ spec/tasks templates unaffected
+- Follow-up TODOs: none
+-->
+
+# WorkplaceWorkTree Constitution
 
 ## Core Principles
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+### I. Simplicity & YAGNI
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+No speculative layers or features. New infrastructure (CI, Docker, transports) is added only when it is the feature's deliverable, never incidentally. New runtime dependencies MUST be justified in the feature's research.md; prefer Node built-ins and existing dependencies. Complexity that survives review MUST be recorded in the plan's Complexity Tracking table.
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+### II. Test-Backed Behavior
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+Every functional requirement (FR) MUST map to at least one automated Vitest test (contract, integration, or e2e). Existing test suites MUST pass unchanged on every feature branch — prior-feature test files are a regression gate and MUST NOT be modified to make new work pass. Environment-dependent tests (e.g., Docker) MUST be skip-gated, never deleted.
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+### III. Backward-Compatible CLI & Formats
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+The stdio launch contract, published CLI flags, and generated map formats (`.codemap/structure.md`, `.codemap/relations.md`) are stable public contracts. Breaking changes require a MAJOR version bump and a documented migration path. New capabilities MUST be opt-in flags with safe defaults.
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
+### IV. Atomic, Observable Operations
 
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
+All file writes MUST be atomic (temp file + rename). Every tool invocation MUST return a structured result report (counts, durations, warnings). Errors MUST be actionable: name the offending path/flag and state the fix. Concurrent executions MUST be serialized via the process-wide mutex.
 
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+### V. Workspace Sovereignty
+
+Outputs land only in the target workspace (`.codemap/`, `.vscode/mcp.json`, guidance files) — never in the install location. All recorded paths MUST be workspace-relative; host/container absolute paths MUST NOT leak into generated documents.
+
+## Additional Constraints
+
+- Language/runtime: TypeScript 5.x on Node.js ≥ 20 LTS; ESM modules.
+- Distribution: npm package `@anhnguyendaenet/workspace-map-mcp` (bin `workspace-map-mcp`); registry installs MUST NOT require a build toolchain on the consumer machine.
+- Security: HTTP transport binds localhost by default; non-localhost binding is explicit opt-in and documented as trusted-network only until auth exists.
+
+## Development Workflow & Quality Gates
+
+- Features follow the Spec Kit flow: specify → clarify → plan → tasks → analyze → implement; `/speckit.analyze` SHOULD be run and CRITICAL findings resolved before `/speckit.implement`.
+- Quality gates for every change: `npm run lint`, `npm run build`, `npm test` all green before merge.
+- Constitution Check gates in plan.md MUST be evaluated before Phase 0 research and re-evaluated after Phase 1 design.
 
 ## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+This constitution supersedes all other practices for this repository. Amendments occur only via `/speckit.constitution`, MUST include a version bump per semantic versioning (MAJOR: principle removals/redefinitions; MINOR: new principles/sections; PATCH: clarifications), and MUST propagate to dependent templates. Compliance is verified in every plan's Constitution Check and every `/speckit.analyze` run.
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+**Version**: 1.0.0 | **Ratified**: 2026-07-08 | **Last Amended**: 2026-07-08

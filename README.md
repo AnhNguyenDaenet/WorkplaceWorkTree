@@ -1,106 +1,61 @@
 # workspace-map-mcp
 
-An MCP (Model Context Protocol) server that maps your workspace so AI assistants navigate **directly** instead of searching:
+An MCP (Model Context Protocol) server that maps any workspace into plain-markdown documents — folder/file tree plus code relations (types, inheritance, imports, calls) — so AI assistants navigate **directly** instead of searching. Offline tree-sitter WASM parsing, atomic writes, no watchers.
 
-- **`scan_structure`** → writes `.codemap/structure.md` — the full folder/file tree; every file line carries its workspace-relative path.
-- **`scan_relations`** → writes `.codemap/relations.md` — type→file index, inheritance/interface implementations, import/using dependencies, and best-effort method calls across **C#, TypeScript/JavaScript, Python, Java, Go, Rust** (regex import fallback for other languages).
-- **`update_maps`** → on-demand incremental refresh of both maps (metadata-diff based; full generation fallback). No watchers, no background processes.
-- **`install_guidance`** → installs an agent skill (`.github/skills/workspace-map/SKILL.md`) and a managed section in `.github/copilot-instructions.md` teaching assistants to use the maps.
+## Quick start (fastest path: npx)
 
-Everything is offline: parsing uses tree-sitter WASM grammars shipped inside the package; outputs are plain markdown written atomically to `.codemap/` at your workspace root.
-
-## Requirements
-
-- Node.js ≥ 20
-
-## Quick start (under 5 minutes)
-
-### 1. Register the server with your MCP client
-
-**VS Code** — `.vscode/mcp.json` in your workspace:
+Add to your project's `.vscode/mcp.json` — done:
 
 ```json
 {
   "servers": {
     "workspace-map": {
       "command": "npx",
-      "args": ["workspace-map-mcp", "--workspace", "${workspaceFolder}"]
+      "args": ["@anhnguyendaenet/workspace-map-mcp", "--workspace", "${workspaceFolder}"]
     }
   }
 }
 ```
 
-**Claude Desktop** — `claude_desktop_config.json`:
+Or let the CLI write that file for you (and optionally install agent guidance):
 
-```json
-{
-  "mcpServers": {
-    "workspace-map": {
-      "command": "npx",
-      "args": ["workspace-map-mcp", "--workspace", "C:/path/to/your/workspace"]
-    }
-  }
-}
+```powershell
+npx @anhnguyendaenet/workspace-map-mcp init --guidance --yes
 ```
 
-Reload the client; it should list four tools.
+Reload your MCP client, then ask your assistant to run `scan_structure` and `scan_relations`. Maps land in `<workspace>/.codemap/`.
 
-### 2. Generate the maps
+Requires Node.js ≥ 20 (or use the [Docker image](docs/docker.md)). Verify any install with `workspace-map-mcp --version`.
 
-Ask your assistant (or invoke directly): run `scan_structure`, then `scan_relations`.
+## The four tools
 
-### 3. Install AI guidance
-
-Run `install_guidance` — your existing copilot-instructions.md content is preserved; the managed block is replaced in place on re-runs.
-
-### 4. Keep maps fresh
-
-After adding/renaming/deleting files, run `update_maps` (incremental, seconds). Use `{"force": true}` to rebuild from scratch.
-
-## Tool reference
-
-| Tool | Input | Writes |
-|---|---|---|
-| `scan_structure` | `includePatterns?`, `excludePatterns?` (gitignore-style globs) | `.codemap/structure.md` (+ `structure/<folder>.md` partitions when large) |
-| `scan_relations` | `includePatterns?`, `excludePatterns?`, `includeCalls?` (default true) | `.codemap/relations.md` (+ `relations/<folder>.md` partitions) |
-| `update_maps` | `force?` (default false) | Both maps + `.codemap/meta.json` |
-| `install_guidance` | `copilotInstructionsPath?` (default `.github/copilot-instructions.md`) | `SKILL.md` + managed instructions section |
-
-Every call returns a JSON report: `status` (`success`/`partial`/`error`), `filesWritten`, `counts`, `durationMs`, `warnings`, `errors`.
-
-### Exclusions
-
-Three layers, all listed in each document header:
-
-1. **Built-in defaults** (non-overridable): `.git`, `node_modules`, `bin`, `obj`, `dist`, `build`, `out`, `.vs`, `.idea`, `__pycache__`, `.venv`, `venv`, `target`, `packages`, `.codemap`
-2. **Workspace `.gitignore` files** (nested supported)
-3. **Your `excludePatterns`** — re-includable via `includePatterns`
+| Tool | What it does |
+|---|---|
+| `scan_structure` | Writes `.codemap/structure.md` — full tree, workspace-relative paths |
+| `scan_relations` | Writes `.codemap/relations.md` — type→file index, inheritance, imports, calls (C#, TS/JS, Python, Java, Go, Rust; import fallback elsewhere) |
+| `update_maps` | Incremental refresh of both maps (`{"force": true}` for full rebuild) |
+| `install_guidance` | Installs an agent skill + managed copilot-instructions section teaching assistants to use the maps |
 
 ## Server CLI
 
 ```text
-workspace-map-mcp --workspace <absolute-path> [--max-doc-lines <n>]
+workspace-map-mcp --workspace <abs-path> [--max-doc-lines <n>]                # stdio (default)
+workspace-map-mcp --workspace <abs-path> --http --port <n> [--host <addr>]   # HTTP (localhost-bound)
+workspace-map-mcp init [--target <dir>] [--transport stdio|http] [--channel npx|global|docker] [--guidance] [--yes]
+workspace-map-mcp --version
 ```
 
-- `--workspace` (required): absolute path of the workspace to map.
-- `--max-doc-lines` (default 1500): partition threshold per generated document.
+## Documentation
 
-## Troubleshooting
+| Guide | Content |
+|---|---|
+| [docs/how-it-works.md](docs/how-it-works.md) | The maps, reading order for agents, architecture, exclusions |
+| [docs/install.md](docs/install.md) | All install channels: npx/registry, GitHub, global/link, Docker |
+| [docs/transports.md](docs/transports.md) | stdio + HTTP recipes for VS Code & Claude Desktop, security notes |
+| [docs/docker.md](docs/docker.md) | Container run modes, bind-mount rules, GHCR tags |
+| [docs/init-command.md](docs/init-command.md) | `init` flags, merge behavior, entry variants |
+| [docs/troubleshooting.md](docs/troubleshooting.md) | Errors and fixes, development setup |
 
-- **"Workspace root not found"** — pass an absolute path to `--workspace`; check it is a readable directory.
-- **Huge repo, slow scan** — add `excludePatterns` (e.g. `["third_party/**"]`); verify in the document's Exclusions header.
-- **A language shows "fallback (imports only)"** — only file-level imports are extracted for it; deep analysis covers C#, TS/JS, Python, Java, Go, Rust.
-- **Maps look stale** — check the `Generated by … on <timestamp>` header line; run `update_maps`.
-- **Duplicate managed-section error** — your copilot-instructions.md has more than one `<!-- BEGIN workspace-map-mcp -->` block; remove extras manually and re-run.
+## License
 
-## Development
-
-```powershell
-npm install         # installs deps + copies WASM grammars to assets/grammars/
-npm test            # vitest: contract, unit, integration suites
-RUN_PERF=1 npm test # opt-in 10k-file performance benchmark
-npm run lint        # eslint
-npm run build       # tsc -> dist/
-```
-
-Generated artifacts land in the *target* workspace's `.codemap/` — never in this repository.
+MIT

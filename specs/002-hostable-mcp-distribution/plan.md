@@ -25,7 +25,7 @@ Make the existing `workspace-map-mcp` server obtainable and connectable from any
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-> **Note**: `.specify/memory/constitution.md` remains the unratified template (unchanged since feature 001). The same generic Spec Kit gates are applied.
+> **Note**: At planning time `.specify/memory/constitution.md` was the unratified template; generic Spec Kit gates were applied. Ratified as v1.0.0 on 2026-07-08 — Principles I–V formalize these same gates; re-validated against them, all PASS.
 
 | Gate (generic) | Status | Evidence |
 |---|---|---|
@@ -71,7 +71,7 @@ src/                                 # existing feature-001 code (unchanged unle
 
 docs/                                # NEW: deep guides (FR-014b)
 ├── how-it-works.md                  # maps, tools, reading order, architecture overview
-├── install.md                       # npm registry, GitHub install, global install, npx
+├── install.md                       # all 4 channels: npx/registry, GitHub install, global/link, Docker pull (deep Docker usage → docker.md)
 ├── transports.md                    # stdio + HTTP recipes, all mcp.json snippets, security notes
 ├── docker.md                        # image usage stdio/HTTP, bind mounts, GHCR tags
 ├── init-command.md                  # init flags, merge behavior, examples
@@ -89,8 +89,10 @@ package.json                         # MODIFIED: scoped name, publishConfig acce
 tests/
 ├── contract/cliArgs.test.ts         # NEW: arg/flag validation contract
 ├── integration/httpTransport.test.ts# NEW: HTTP e2e mirroring stdio e2e (SC-003)
+├── integration/httpTransportEdges.test.ts # NEW: port conflict, concurrency, SIGTERM drain (US2-AS3/4/5)
 ├── integration/initCommand.test.ts  # NEW: mcp.json create/merge/idempotent + guidance opt-in
-└── integration/packSmoke.test.ts    # NEW: npm pack → install tarball in temp dir → launch → tools work
+├── integration/packSmoke.test.ts    # NEW: npm pack → install tarball in temp dir → launch → tools work
+└── integration/dockerSmoke.test.ts  # NEW: optional-gated Docker stdio/HTTP smoke (US3)
 ```
 
 **Structure Decision**: Remains a single npm package. The entry point splits into thin `transport/` and `cli/` layers over the untouched `server.ts` tool registration, so both transports and the init command share one code path and the whole feature-001 test suite runs unchanged (SC-006). Docker/CI are repository-level artifacts, not code modules.

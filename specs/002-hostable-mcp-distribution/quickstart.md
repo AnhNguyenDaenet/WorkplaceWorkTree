@@ -73,6 +73,7 @@ Client entry: `{ "url": "http://127.0.0.1:3579/mcp" }`. Binds localhost by defau
 | Second server on same port → clear error | port conflict handling | US2-AS3 |
 | Docker stdio writes maps to host project; no `/workspace` strings inside docs | path translation | US3-AS3 |
 | `init` re-run → single `workspace-map` entry, other servers untouched | idempotent merge | US4-AS2, SC-005 |
+| Follow README quickstart into a brand-new project | connected < 5 min via chosen channel | SC-004, US4-AS4 |
 | Feature-001 test suite green, unchanged | zero regressions | SC-006 |
 
 ## 5. Docs map (definition of done includes these)
