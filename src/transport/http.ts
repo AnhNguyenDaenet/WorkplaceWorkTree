@@ -18,14 +18,13 @@ export function startHttp(config: TransportConfiguration): Promise<Server> {
   let inFlight = 0;
   let shuttingDown = false;
 
-  const maybeExit = (): void => {
-    if (shuttingDown && inFlight === 0) {
-      console.error(`[${SERVER_NAME}] shutdown complete.`);
-      process.exit(0);
-    }
-  };
-
   const handler = async (req: IncomingMessage, res: ServerResponse): Promise<void> => {
+    if (shuttingDown) {
+      // US2-AS5: requests after the shutdown signal fail cleanly, never half-served.
+      res.writeHead(503, { 'content-type': 'application/json' });
+      res.end(JSON.stringify({ error: 'Server is shutting down.' }));
+      return;
+    }
     const url = new URL(req.url ?? '/', `http://${req.headers.host ?? 'localhost'}`);
     if (url.pathname !== '/mcp') {
       res.writeHead(404, { 'content-type': 'application/json' });
@@ -49,7 +48,6 @@ export function startHttp(config: TransportConfiguration): Promise<Server> {
       transport.close().catch(() => {});
       server.close().catch(() => {});
       inFlight--;
-      maybeExit();
     });
     try {
       await server.connect(transport);
@@ -79,7 +77,20 @@ export function startHttp(config: TransportConfiguration): Promise<Server> {
     );
     httpServer.close();
     httpServer.closeIdleConnections();
-    maybeExit();
+    void (async () => {
+      // Drain the serialized tool queue (unbounded — in-flight work always completes;
+      // atomic writes guarantee maps are never half-written).
+      await mutex.runExclusive(async () => {});
+      // Give final response bytes a bounded window to flush, then force-close any
+      // lingering keep-alive/SSE sockets that would otherwise hold the process open.
+      const deadline = Date.now() + 5000;
+      while (inFlight > 0 && Date.now() < deadline) {
+        await new Promise((resolve) => setTimeout(resolve, 50));
+      }
+      httpServer.closeAllConnections();
+      console.error(`[${SERVER_NAME}] shutdown complete.`);
+      process.exit(0);
+    })();
   };
   process.on('SIGINT', () => shutdown('SIGINT'));
   process.on('SIGTERM', () => shutdown('SIGTERM'));
