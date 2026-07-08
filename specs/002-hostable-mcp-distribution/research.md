@@ -5,7 +5,7 @@
 
 ## R1. Package identity & publish configuration
 
-- **Decision**: Rename package to `@anhnguyendaenet/workspace-map-mcp`; keep `bin: { "workspace-map-mcp": "dist/index.js" }`; add `"publishConfig": { "access": "public" }` (scoped packages default to restricted); add `"repository"`, `"keywords"`, `"files"` including `docs/` excluded (docs live on GitHub, keep tarball lean: dist, assets/grammars, README).
+- **Decision**: Rename package to `@anhndh1997/workspace-map-mcp` (scope = owner's npm username; original `@anhnguyendaenet` scope did not exist on npm); keep `bin: { "workspace-map-mcp": "dist/index.js" }`; add `"publishConfig": { "access": "public" }` (scoped packages default to restricted); add `"repository"`, `"keywords"`, `"files"` including `docs/` excluded (docs live on GitHub, keep tarball lean: dist, assets/grammars, README).
 - **Rationale**: Scoped name is guaranteed available (user decision B); public access flag is mandatory for free scoped publishing; bin name unchanged keeps every existing mcp.json/recipe working.
 - **Alternatives considered**: unscoped `workspace-map-mcp` (availability risk, rejected by user); bundling docs/ in tarball (bloats an already 11 MB-unpacked package for content best read on GitHub).
 
@@ -86,4 +86,4 @@
 | Topic | Resolution |
 |---|---|
 | Documentation scope | README quickstart + docs/ deep guides; part of definition of done |
-| npm package name | `@anhnguyendaenet/workspace-map-mcp`, bin `workspace-map-mcp` |
+| npm package name | `@anhndh1997/workspace-map-mcp`, bin `workspace-map-mcp` (scope revised at publish time) |

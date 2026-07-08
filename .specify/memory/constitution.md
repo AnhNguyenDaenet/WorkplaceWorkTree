@@ -34,7 +34,7 @@ Outputs land only in the target workspace (`.codemap/`, `.vscode/mcp.json`, guid
 ## Additional Constraints
 
 - Language/runtime: TypeScript 5.x on Node.js ≥ 20 LTS; ESM modules.
-- Distribution: npm package `@anhnguyendaenet/workspace-map-mcp` (bin `workspace-map-mcp`); registry installs MUST NOT require a build toolchain on the consumer machine.
+- Distribution: npm package `@anhndh1997/workspace-map-mcp` (bin `workspace-map-mcp`); registry installs MUST NOT require a build toolchain on the consumer machine.
 - Security: HTTP transport binds localhost by default; non-localhost binding is explicit opt-in and documented as trusted-network only until auth exists.
 
 ## Development Workflow & Quality Gates

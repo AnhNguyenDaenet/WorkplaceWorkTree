@@ -12,7 +12,7 @@
 
 ```powershell
 # A) npm registry (after publish)
-npx @anhnguyendaenet/workspace-map-mcp --version
+npx @anhndh1997/workspace-map-mcp --version
 
 # B) straight from GitHub (self-builds on install)
 npm install -g github:AnhNguyenDaenet/WorkplaceWorkTree
@@ -47,7 +47,7 @@ Creates/merges `.vscode/mcp.json` (other servers preserved), optionally installs
   "servers": {
     "workspace-map": {
       "command": "npx",
-      "args": ["@anhnguyendaenet/workspace-map-mcp", "--workspace", "${workspaceFolder}"]
+      "args": ["@anhndh1997/workspace-map-mcp", "--workspace", "${workspaceFolder}"]
     }
   }
 }

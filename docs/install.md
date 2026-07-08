@@ -8,7 +8,7 @@ Verify any install with `--version` (must print the same version on every channe
 No install step at all — MCP clients spawn it on demand:
 
 ```powershell
-npx @anhnguyendaenet/workspace-map-mcp --version
+npx @anhndh1997/workspace-map-mcp --version
 ```
 
 The published tarball ships prebuilt code and all WASM grammars; **no build toolchain is required** on your machine.
@@ -16,7 +16,7 @@ The published tarball ships prebuilt code and all WASM grammars; **no build tool
 Permanent global install from the registry:
 
 ```powershell
-npm install -g @anhnguyendaenet/workspace-map-mcp
+npm install -g @anhndh1997/workspace-map-mcp
 workspace-map-mcp --version
 ```
 
@@ -40,7 +40,7 @@ npm link          # or: npm install -g .
 workspace-map-mcp --version
 ```
 
-Undo with `npm uninstall -g @anhnguyendaenet/workspace-map-mcp`.
+Undo with `npm uninstall -g @anhndh1997/workspace-map-mcp`.
 
 ## 4. Docker (GHCR)
 

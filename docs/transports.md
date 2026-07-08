@@ -20,7 +20,7 @@ The client spawns the server per session; no manual process management.
   "servers": {
     "workspace-map": {
       "command": "npx",
-      "args": ["@anhnguyendaenet/workspace-map-mcp", "--workspace", "${workspaceFolder}"]
+      "args": ["@anhndh1997/workspace-map-mcp", "--workspace", "${workspaceFolder}"]
     }
   }
 }
@@ -46,7 +46,7 @@ Globally installed command instead of npx:
   "mcpServers": {
     "workspace-map": {
       "command": "npx",
-      "args": ["@anhnguyendaenet/workspace-map-mcp", "--workspace", "C:/path/to/your/project"]
+      "args": ["@anhndh1997/workspace-map-mcp", "--workspace", "C:/path/to/your/project"]
     }
   }
 }

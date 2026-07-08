@@ -21,7 +21,7 @@ export function resolveGrammarsDir(): string {
   const expected = fileURLToPath(candidates[0]);
   throw new Error(
     `Grammar assets not found. Expected directory: ${expected}. ` +
-      'The package install appears incomplete — reinstall @anhnguyendaenet/workspace-map-mcp ' +
+      'The package install appears incomplete — reinstall @anhndh1997/workspace-map-mcp ' +
       '(or run `node scripts/fetch-grammars.mjs` in a source checkout).',
   );
 }

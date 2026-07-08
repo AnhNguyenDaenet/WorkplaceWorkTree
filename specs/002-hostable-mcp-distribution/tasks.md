@@ -47,7 +47,7 @@ Single npm package (per plan.md): `src/`, `tests/`, `docs/`, repo-root `Dockerfi
 
 ## Phase 3: User Story 1 - Install From a Registry or Repository and Use Anywhere (Priority: P1) 🎯 MVP
 
-**Goal**: `@anhnguyendaenet/workspace-map-mcp` installable via npm registry (prebuilt, no toolchain), GitHub (self-building), and global/local link — with grammar assets resolving from every install location
+**Goal**: `@anhndh1997/workspace-map-mcp` installable via npm registry (prebuilt, no toolchain), GitHub (self-building), and global/local link — with grammar assets resolving from every install location
 
 **Independent Test**: `npm pack` → install tarball into an empty temp dir → `workspace-map-mcp --version` + full scan flow against a sample project; separately `npm install -g` from the local clone path and re-verify (US1 acceptance scenarios 1–4)
 

@@ -24,7 +24,7 @@ Exit codes: `0` success, `1` any validation/parse/write failure — **never a pa
 
 | Invocation | Entry |
 |---|---|
-| `init` (defaults) | `{ "command": "npx", "args": ["@anhnguyendaenet/workspace-map-mcp", "--workspace", "${workspaceFolder}"] }` |
+| `init` (defaults) | `{ "command": "npx", "args": ["@anhndh1997/workspace-map-mcp", "--workspace", "${workspaceFolder}"] }` |
 | `init --channel global` | `{ "command": "workspace-map-mcp", "args": ["--workspace", "${workspaceFolder}"] }` |
 | `init --channel docker` | `{ "command": "docker", "args": ["run","-i","--rm","-v","${workspaceFolder}:/workspace","ghcr.io/anhnguyendaenet/workspace-map-mcp","--workspace","/workspace"] }` |
 | `init --transport http --port 4000` | `{ "url": "http://127.0.0.1:4000/mcp" }` |

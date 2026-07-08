@@ -34,7 +34,7 @@ One per channel (conceptual — realized in package.json, Dockerfile, workflows)
 
 | Channel | Artifact | Build-on-install | Key attributes |
 |---|---|---|---|
-| npm registry | Tarball `@anhnguyendaenet/workspace-map-mcp` | No — prebuilt via `prepublishOnly` (FR-001) | files: dist/, assets/grammars/, README; publishConfig access public |
+| npm registry | Tarball `@anhndh1997/workspace-map-mcp` | No — prebuilt via `prepublishOnly` (FR-001) | files: dist/, assets/grammars/, README; publishConfig access public |
 | GitHub install | Git tree, self-building | Yes — guarded `prepare` (FR-002, R2) | devDeps available during git install; build-if-needed skip logic |
 | Global/local | Same tarball or clone via `npm install -g` / `npm link` | Inherited from source | bin `workspace-map-mcp` on PATH (FR-003) |
 | Docker | Image `ghcr.io/anhnguyendaenet/workspace-map-mcp:{version,latest}` | No — CI prebuilds context (R7) | node:20-slim, non-root, ENTRYPOINT server (FR-010) |
@@ -58,7 +58,7 @@ The generated/merged entry inside `.vscode/mcp.json` → `servers["workspace-map
 
 | Variant | Shape |
 |---|---|
-| npx stdio | `{ "command": "npx", "args": ["@anhnguyendaenet/workspace-map-mcp", "--workspace", "${workspaceFolder}"] }` |
+| npx stdio | `{ "command": "npx", "args": ["@anhndh1997/workspace-map-mcp", "--workspace", "${workspaceFolder}"] }` |
 | global stdio | `{ "command": "workspace-map-mcp", "args": ["--workspace", "${workspaceFolder}"] }` |
 | docker stdio | `{ "command": "docker", "args": ["run","-i","--rm","-v","${workspaceFolder}:/workspace","ghcr.io/anhnguyendaenet/workspace-map-mcp","--workspace","/workspace"] }` |
 | http | `{ "url": "http://127.0.0.1:<port>/mcp" }` |

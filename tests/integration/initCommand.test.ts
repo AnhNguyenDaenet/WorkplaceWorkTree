@@ -49,7 +49,7 @@ describe('init command (US4)', () => {
     const config = await readConfig(dir);
     expect(config.servers['workspace-map']).toEqual({
       command: 'npx',
-      args: ['@anhnguyendaenet/workspace-map-mcp', '--workspace', '${workspaceFolder}'],
+      args: ['@anhndh1997/workspace-map-mcp', '--workspace', '${workspaceFolder}'],
     });
   });
 

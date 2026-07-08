@@ -8,7 +8,7 @@
 
 ```json
 {
-  "name": "@anhnguyendaenet/workspace-map-mcp",
+  "name": "@anhndh1997/workspace-map-mcp",
   "bin": { "workspace-map-mcp": "dist/index.js" },
   "publishConfig": { "access": "public" },
   "files": ["dist", "assets/grammars", "README.md"]

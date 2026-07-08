@@ -10,13 +10,13 @@
 ### Session 2026-07-07
 
 - Q: What must the post-implementation README update include? → A: Short README quickstart + separate docs/ folder for deep guides (architecture/how it works, transports, Docker, init command); documentation update is part of this feature's definition of done.
-- Q: What exact npm package name should be published (and printed in docs/init output)? → A: `@anhnguyendaenet/workspace-map-mcp` (scoped — guaranteed available); the installed command (bin) remains `workspace-map-mcp`.
+- Q: What exact npm package name should be published (and printed in docs/init output)? → A: `@anhndh1997/workspace-map-mcp` (scoped to the owner's npm account); the installed command (bin) remains `workspace-map-mcp`. *(Revised 2026-07-08 at publish time: the originally chosen scope `@anhnguyendaenet` does not exist on npm — scopes must match the publishing account/org; the owner's npm username is `anhndh1997`.)*
 
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Install From a Registry or Repository and Use Anywhere (Priority: P1)
 
-A developer working in a completely different project (no clone of this repo) wants the workspace mapping tools. They install the package from the public npm registry (`npx @anhnguyendaenet/workspace-map-mcp`), or directly from the GitHub repository, or as a one-time global install from a local clone. After installation, they point the server at *their* project via `--workspace` and all four tools work exactly as they do in this repo.
+A developer working in a completely different project (no clone of this repo) wants the workspace mapping tools. They install the package from the public npm registry (`npx @anhndh1997/workspace-map-mcp`), or directly from the GitHub repository, or as a one-time global install from a local clone. After installation, they point the server at *their* project via `--workspace` and all four tools work exactly as they do in this repo.
 
 **Why this priority**: Distribution is the entire point of this feature — until the server is obtainable outside this repo, no other project can use it. npm/GitHub install is the lowest-friction, highest-reach channel.
 
@@ -24,7 +24,7 @@ A developer working in a completely different project (no clone of this repo) wa
 
 **Acceptance Scenarios**:
 
-1. **Given** the package is published to the public npm registry, **When** a user runs `npx @anhnguyendaenet/workspace-map-mcp --workspace <their-project>` from any directory, **Then** the server starts without any manual build step and all four tools function.
+1. **Given** the package is published to the public npm registry, **When** a user runs `npx @anhndh1997/workspace-map-mcp --workspace <their-project>` from any directory, **Then** the server starts without any manual build step and all four tools function.
 2. **Given** a user installs via `npm install -g github:<owner>/<repo>`, **When** the install completes, **Then** the package is built automatically during installation (grammars present, compiled output present) and the global `workspace-map-mcp` command works.
 3. **Given** a local clone, **When** the user runs a documented one-command global install, **Then** the command is available on PATH from any directory.
 4. **Given** any install channel, **When** the server is launched against a workspace that is not this repository, **Then** generated maps land in that workspace's `.codemap/` and never in the install location.
@@ -99,7 +99,7 @@ A developer in a new project runs a single init command (e.g., `workspace-map-mc
 
 ### Functional Requirements
 
-- **FR-001**: The package MUST be publishable to and installable from the public npm registry under the name `@anhnguyendaenet/workspace-map-mcp` (bin command `workspace-map-mcp`) such that `npx @anhnguyendaenet/workspace-map-mcp --workspace <path>` works on a machine that has never cloned this repository, with no manual build step.
+- **FR-001**: The package MUST be publishable to and installable from the public npm registry under the name `@anhndh1997/workspace-map-mcp` (bin command `workspace-map-mcp`) such that `npx @anhndh1997/workspace-map-mcp --workspace <path>` works on a machine that has never cloned this repository, with no manual build step.
 - **FR-002**: The package MUST be installable directly from the GitHub repository (e.g., `npm install github:<owner>/<repo>`), with compiled output and grammar assets produced automatically during installation.
 - **FR-003**: A documented one-command global install from a local clone MUST make the `workspace-map-mcp` command available on PATH.
 - **FR-004**: Grammar assets and compiled code MUST resolve correctly relative to the installed package location for every supported install channel (registry, GitHub, global, link, npx cache, container).
@@ -126,7 +126,7 @@ A developer in a new project runs a single init command (e.g., `workspace-map-mc
 
 ### Measurable Outcomes
 
-- **SC-001**: On a clean machine with only Node.js ≥ 20, `npx @anhnguyendaenet/workspace-map-mcp --workspace <sample>` produces working maps in under 3 minutes including download.
+- **SC-001**: On a clean machine with only Node.js ≥ 20, `npx @anhndh1997/workspace-map-mcp --workspace <sample>` produces working maps in under 3 minutes including download.
 - **SC-002**: All four distribution channels (registry, GitHub install, global install, Docker) pass the same end-to-end tool-flow verification against a sample project.
 - **SC-003**: An MCP client connecting over HTTP completes the full four-tool flow with results byte-equivalent (modulo timestamps/duration) to the stdio flow on the same workspace.
 - **SC-004**: A user following only the README quickstart (plus linked docs/ guide for their channel) connects the server to a brand-new project in under 5 minutes via any chosen channel.
@@ -135,7 +135,7 @@ A developer in a new project runs a single init command (e.g., `workspace-map-mc
 
 ## Assumptions
 
-- The npm package publishes as `@anhnguyendaenet/workspace-map-mcp` (scoped, public access); the executable command installed by the package remains `workspace-map-mcp`.
+- The npm package publishes as `@anhndh1997/workspace-map-mcp` (scoped, public access); the executable command installed by the package remains `workspace-map-mcp`.
 - npm registry publishing requires an npm account/token owned by the user; CI publishing is configured but the first publish may be manual.
 - HTTP transport uses the MCP SDK's standard streamable-HTTP server transport; one server instance serves one workspace (the one given via `--workspace`) — multi-workspace routing in a single HTTP instance is out of scope for this feature.
 - HTTP mode is intended for localhost/trusted networks in v1; authentication/TLS are future enhancements and are documented as such.

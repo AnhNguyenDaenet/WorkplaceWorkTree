@@ -1,5 +1,5 @@
 {
-  "name": "@anhnguyendaenet/workspace-map-mcp",
+  "name": "@anhndh1997/workspace-map-mcp",
   "version": "0.2.0",
   "description": "MCP server that maps a workspace: markdown folder/file tree + code relation maps (types, inheritance, imports, calls) for AI-assisted navigation.",
   "type": "module",
