@@ -6,6 +6,8 @@ Image: `ghcr.io/anhnguyendaenet/workspace-map-mcp` — tags `latest` and one per
 docker pull ghcr.io/anhnguyendaenet/workspace-map-mcp:latest
 ```
 
+> **Pulling is automatic**: `docker run` downloads the image on first use when it isn't cached locally (default `--pull=missing`), so the explicit `docker pull` above is optional. It is still recommended once up front because a cold download during the first MCP client launch can exceed the client's server-start timeout (the entry works on the next attempt once the pull finished). Note that a cached `latest` is never re-checked — re-run `docker pull` to update, or add `--pull=always` to the run args to check the registry on every launch.
+
 ## Bind-mount rules
 
 - Mount your project at `/workspace` and pass `--workspace /workspace`.
@@ -33,7 +35,7 @@ docker pull ghcr.io/anhnguyendaenet/workspace-map-mcp:latest
 }
 ```
 
-`docker run -i` keeps stdin open — that *is* the MCP channel; the client manages the container's lifetime.
+`docker run -i` keeps stdin open — that *is* the MCP channel; the client manages the container's lifetime. If the image is missing, this first launch pulls it automatically; pre-pull (above) to avoid a slow first start. To always track the newest `latest`, insert `"--pull=always",` right after `"run",` in the args.
 
 ## HTTP mode (long-running)
 
