@@ -44,6 +44,8 @@ Exit codes: `0` success, `1` any validation/parse/write failure — **never a pa
 
 ## Generated entry variants
 
+Entries are written pretty-printed (2-space indent, one array element per line) — shown compact here for table readability:
+
 | Invocation | Entry |
 |---|---|
 | `init` (defaults) | `{ "command": "npx", "args": ["@anhndh1997/workspace-map-mcp", "--workspace", "${workspaceFolder}"] }` |

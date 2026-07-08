@@ -25,10 +25,14 @@ docker pull ghcr.io/anhnguyendaenet/workspace-map-mcp:latest
     "workspace-map": {
       "command": "docker",
       "args": [
-        "run", "-i", "--rm",
-        "-v", "${workspaceFolder}:/workspace",
+        "run",
+        "-i",
+        "--rm",
+        "-v",
+        "${workspaceFolder}:/workspace",
         "ghcr.io/anhnguyendaenet/workspace-map-mcp",
-        "--workspace", "/workspace"
+        "--workspace",
+        "/workspace"
       ]
     }
   }

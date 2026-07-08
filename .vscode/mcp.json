@@ -1,12 +1,11 @@
 {
   "servers": {
     "workspace-map": {
-      "command": "docker",
+      "command": "npx",
       "args": [
-        "run", "-i", "--rm",
-        "-v", "${workspaceFolder}:/workspace",
-        "ghcr.io/anhnguyendaenet/workspace-map-mcp",
-        "--workspace", "/workspace"
+        "@anhndh1997/workspace-map-mcp",
+        "--workspace",
+        "${workspaceFolder}"
       ]
     }
   }

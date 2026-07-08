@@ -11,7 +11,11 @@ Add to your project's `.vscode/mcp.json` — done:
   "servers": {
     "workspace-map": {
       "command": "npx",
-      "args": ["@anhndh1997/workspace-map-mcp", "--workspace", "${workspaceFolder}"]
+      "args": [
+        "@anhndh1997/workspace-map-mcp",
+        "--workspace",
+        "${workspaceFolder}"
+      ]
     }
   }
 }
